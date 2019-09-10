@@ -97,7 +97,7 @@ def parse_compile_options(options, path, name) :
 
             if("__ESP_FILE__" in files_obj["macros"][-1]):
                 files_obj["macros"].pop(-1)
-                
+
         elif options[i].startswith(OPTS_INCLUDE) :
             if len(options[i]) == len(OPTS_INCLUDE):
                 files_obj["include"].append(options[i + 1])
@@ -170,9 +170,9 @@ def parse_linker_options(options) :
 class DataObj(object):
     def __init__(self):
         self.comm = { "flags": set([]), "macros": set([]) }
-        self.c = { "flags": set([]), "macros": set([]) }
-        self.cpp = { "flags": set([]), "macros": set([]) }
-        self.asm = { "flags": set([]), "macros": set([]) }
+        self.c = { "flags": set([]), "macros": set(["__ESP_FILE__=__FILE__"]) }
+        self.cpp = { "flags": set([]), "macros": set(["__ESP_FILE__=__FILE__"]) }
+        self.asm = { "flags": set([]), "macros": set(["__ESP_FILE__=__FILE__"]) }
         self.linker = { "flags": set([]), "search_paths": set([]), "script_files": set([]) }
         self.incdirs = OrderedDict()
         self.includes = []
@@ -322,5 +322,6 @@ if __name__ == '__main__':
                 data_obj.feedLinkerOptions(parse_linker_options(items[:-1]))
             else:
                 data_obj.feedFileOptions(parse_compile_options(items[1:-1], items[-1], items[0]))
+    
     generate = Generator(data_obj)
     generate.generate(args.project, args.tool)
