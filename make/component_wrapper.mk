@@ -251,21 +251,28 @@ $(2)/%.o: $$(COMPONENT_PATH)/$(1)/%.c $(COMMON_MAKEFILES) $(COMPONENT_MAKEFILE) 
 	$$(summary) CC $$(patsubst $$(PWD)/%,%,$$(CURDIR))/$$@
 	$$(CC) $$(CFLAGS) $$(CPPFLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -I $(1) -c $$(abspath $$<) -o $$@
 	$(call AppendSourceToDependencies,$$<,$$@)
+	$$(gen_cmd) $$(COMPONENT_NAME) $$(CFLAGS) $$(CPPFLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -c -o $$@ $$(abspath $$<) >> $$(APP_GEN)
 
 $(2)/%.o: $$(COMPONENT_PATH)/$(1)/%.cpp $(COMMON_MAKEFILES) $(COMPONENT_MAKEFILE) | $(COMPONENT_OBJDIRS)
 	$$(summary) CXX $$(patsubst $$(PWD)/%,%,$$(CURDIR))/$$@
 	$$(CXX) $$(CXXFLAGS) $$(CPPFLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -I $(1) -c $$(abspath $$<) -o $$@
 	$(call AppendSourceToDependencies,$$<,$$@)
+	$$(gen_cmd) $$(COMPONENT_NAME) $$(CXXFLAGS) $$(CPPFLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -c -o $$@ $$(abspath $$<) >> $$(APP_GEN)
+
 
 $(2)/%.o: $$(COMPONENT_PATH)/$(1)/%.cc $(COMMON_MAKEFILES) $(COMPONENT_MAKEFILE) | $(COMPONENT_OBJDIRS)
 	$$(summary) CXX $$(patsubst $$(PWD)/%,%,$$(CURDIR))/$$@
 	$$(CXX) $$(CXXFLAGS) $$(CPPFLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -I $(1) -c $$(abspath $$<) -o $$@
 	$(call AppendSourceToDependencies,$$<,$$@)
+	$$(gen_cmd) $$(COMPONENT_NAME) $$(CXXFLAGS) $$(CPPFLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -c -o $$@ $$(abspath $$<) >> $$(APP_GEN)
+
 
 $(2)/%.o: $$(COMPONENT_PATH)/$(1)/%.S $(COMMON_MAKEFILES) $(COMPONENT_MAKEFILE) | $(COMPONENT_OBJDIRS)
 	$$(summary) AS $$(patsubst $$(PWD)/%,%,$$(CURDIR))/$$@
 	$$(CC) $$(CPPFLAGS) $$(DEBUG_FLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -I $(1) -c $$(abspath $$<) -o $$@
 	$(call AppendSourceToDependencies,$$<,$$@)
+	$$(gen_cmd) $$(COMPONENT_NAME) $$(CPPFLAGS) $$(DEBUG_FLAGS) $$(addprefix -I ,$$(COMPONENT_INCLUDES)) $$(addprefix -I ,$$(COMPONENT_EXTRA_INCLUDES)) -c -o $$@ $$(abspath $$<) >> $$(APP_GEN)	
+
 
 # CWD is build dir, create the build subdirectory if it doesn't exist
 #

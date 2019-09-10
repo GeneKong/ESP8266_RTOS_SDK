@@ -418,6 +418,24 @@ PYTHON=$(call dequote,$(CONFIG_PYTHON))
 APP_ELF:=$(BUILD_DIR_BASE)/$(PROJECT_NAME).elf
 APP_MAP:=$(APP_ELF:.elf=.map)
 APP_BIN:=$(APP_ELF:.elf=.bin)
+APP_GEN:=$(APP_ELF:.elf=.gen)
+
+# When in generate IDE project files, replace all compilation operations
+IDE ?=gnu_mcu_eclipse#
+gen_cmd ?= @true
+
+ifdef NO_CMP
+gen_cmd := @echo
+
+# rewrite CC builds.
+export CC := @true
+export CXX := @true
+export LD := @true
+export AR := @true
+export OBJCOPY := @true
+export SIZE := @true
+endif
+export gen_cmd APP_GEN IDE
 
 # Include any Makefile.projbuild file letting components add
 # configuration at the project level
@@ -457,6 +475,16 @@ else
 	@echo "App built. Default flash app command is:"
 	@echo $(ESPTOOLPY_WRITE_FLASH) $(APP_OFFSET) $(APP_BIN)
 endif
+
+gen2: $(APP_ELF)
+	$(gen_cmd) $(CPPFLAGS) $(LDFLAGS) -o $@ -Wl,-Map=$(APP_MAP) >> $(APP_GEN)
+	make gen3
+
+gen3: 
+	python $(IDF_PATH)/scripts/comp2yaml.py $(APP_GEN) -t $(IDE) -p $(PROJECT_NAME)
+
+gen: app-clean	
+	make gen2 NO_CMP=true
 
 .PHONY: check_python_dependencies
 
